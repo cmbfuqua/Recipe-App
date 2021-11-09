@@ -10,7 +10,6 @@ def put_menu():
 
 
 def main():
-    recipes = []
     recipe = Recipe_Book()
     user = User()
     print('Hello, welcome to your families home recipe app\n')
@@ -25,15 +24,15 @@ def main():
         option = int(input('What would you like to do? '))
 
         if option == 1:
-            add_recipe(recipes)
+            recipe.add_recipe()
 
         if option == 2:
-            edit_recipes(recipes)
+            recipe.edit_recipes()
 
         if option == 3:
-            delete_recipe(recipes)
+            recipe.delete_recipe()
         if option == 4: 
-            view_recipes(recipes)
+            recipe.view_recipes()
 
 if __name__ == '__main__':
     main()

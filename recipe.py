@@ -5,6 +5,9 @@ class Recipe():
         self.ingredients = []
         self.instructions: str 
 
+    def set_name(self):
+        self.name = input('What is the name of your recipe? ')
+
     def add_ingredient(self):
         ingredient = Ingredient()
         ingredient.add_ingredient()
@@ -14,7 +17,7 @@ class Recipe():
         for ingredient in self.ingredients:
             print(ingredient.item)       
         done = ''
-        while done.lower() != 'quit':
+        while done.lower() != 'quit' or done.lower() != 'no':
             name = input('What is the name of the ingredient: ')
             for ingredient in self.ingredients:
                 if ingredient.name.lower() == name.lower():
@@ -34,7 +37,7 @@ class Recipe():
                 if ingredient.name.lower() == name.lower():
                     self.ingredients.remove(ingredient)
                     in_list = False
-                    print('Removed the recipe :)')
+                    print('Removed the ingredient :)')
                 else:
                     print('Sorry, that is an invalid ingredient.')
     

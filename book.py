@@ -4,10 +4,11 @@ class Recipe_Book():
         self.name: str
         self.owner: str 
         self.creation: str 
+        self.recipes = []
         
-    def add_recipe(recipes):
+    def add_recipe(self):
         recipe = Recipe()
-        recipe.name = input('What is the name of the recipe: ')
+        recipe.set_name()
         num_ingredients = int(input('How many ingredients are there? '))
         for num in range(num_ingredients):
             print('\n-------------------------------------------\n')
@@ -15,15 +16,15 @@ class Recipe_Book():
             
         print('\n-------------\n')
         recipe.add_instructions()
-        recipes.append(recipe)
+        self.recipes.append(recipe)
         print()
 
-    def edit_recipes(recipes):
+    def edit_recipes(self):
         option = input('Which recipe would you like to edit? ')
         how = ''
         while how.lower() != 'quit':
             how = input('What do you want to change?(name, ingredient, instructions, quit): ')
-            for recipe in recipes:
+            for recipe in self.recipes:
                 if recipe.name == option:
                     if how.lower() == 'name':
                         recipe.name = input('What is the new name: ')
@@ -35,3 +36,13 @@ class Recipe_Book():
                             recipe.edit_ingredient()
                     if how.lower() == 'instructions':
                         recipe.instruction = input('What are the new instructions? ')
+    def delete_recipe(self):
+        option = input('Which recipe would you like to delete? ')
+        for recipe in self.recipes:
+            if option.lower() == recipe.name.lower():
+                self.recipes.remove(recipe)
+
+    def view_recipes(self):
+        for recipe in self.recipes:
+            print(recipe.view_recipe())
+            print('\n\n')
