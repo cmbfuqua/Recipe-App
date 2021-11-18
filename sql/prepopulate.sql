@@ -19,7 +19,8 @@ Tables that we will populate through the program
 ****************************************/
 -- ------------Static Data Population------------------------------
 use recipe_app;
--- Measurements table
+
+-- -----------------------------------------------------------------------Measurements table
 insert into measurement(measurement,abbreviation)
 values ('inch','in');
 insert into measurement(measurement,abbreviation)
@@ -42,8 +43,8 @@ insert into measurement(measurement,abbreviation)
 values('gallon','gal');
 insert into measurement(measurement,abbreviation)
 values ('Farenheit','F');
--- Permissions
-
+-- -----------------------------------------------------------------------------Permissions
+-- ----------------------------------- Group level permissions
 INSERT INTO permissions (permission_name,permission_desc)
 values('request to join','allows the user to request to join a group');
 INSERT INTO permissions (permission_name,permission_desc)
@@ -60,6 +61,7 @@ INSERT INTO permissions (permission_name,permission_desc)
 values('edit group','allows a user to edit group details');
 INSERT INTO permissions (permission_name,permission_desc)
 values('create group','allows a user to create a recipe book group');
+-- ------------------------------------------------ recipe level permissions
 INSERT INTO permissions (permission_name,permission_desc)
 values('comment','allows a user to make comments on a recipe');
 INSERT INTO permissions (permission_name,permission_desc)
@@ -73,7 +75,7 @@ values('edit recipe','allows a user to edit a recipe they are assigned to');
 INSERT INTO permissions (permission_name,permission_desc)
 values('create recipe','allows the user to create a recipe');
 
--- Role
+-- -------------------------------------------------------------------------------------Role
 /*
 - group level roles
 group creator
@@ -84,28 +86,28 @@ owner
 co-owner
 viewer
 */
--- -----------------------recipe level
+-- ----------------------------------------recipe level
 insert into roles(role_name)
 values('viewer');
 insert into roles(role_name)
 values('co-owner');
 insert into roles(role_name)
 values('owner');
--- ---------------------group level
+-- ---------------------------------------------group level
 insert into roles(role_name)
 values('member');
 insert into roles(role_name)
 values('admin');
 insert into roles(role_name)
 values('group creator');
--- Role_Permissions
+-- --------------------------------------------------------------------------------------- Role_Permissions
 /*
 create recipe
 edit recipe
 delete recipe
 view recipe
 share recipe
-comment on recipe
+comment
 --------------------
 create group
 edit group
@@ -116,13 +118,94 @@ add admin
 remove admin
 request to join a group
 */
--- ------------------------ recipe owner
+-- -------------------------------------------------------------------- recipe 
+-- --------------------------------------------owner
 insert into role_permission(role_id,permission_id)
 values((select role_id from roles where role_name ='owner'),
 	   (select permission_id from permissions where permission_name = 'create recipe'));
 insert into role_permission(role_id,permission_id)
 values((select role_id from roles where role_name ='owner'),
 	   (select permission_id from permissions where permission_name = 'edit recipe'));
+insert into role_permission(role_id,permission_id)
+values((select role_id from roles where role_name ='owner'),
+	   (select permission_id from permissions where permission_name = 'delete recipe'));
+insert into role_permission(role_id,permission_id)
+values((select role_id from roles where role_name ='owner'),
+	   (select permission_id from permissions where permission_name = 'view recipe'));
+insert into role_permission(role_id,permission_id)
+values((select role_id from roles where role_name ='owner'),
+	   (select permission_id from permissions where permission_name = 'share recipe'));
+insert into role_permission(role_id,permission_id)
+values((select role_id from roles where role_name ='owner'),
+	   (select permission_id from permissions where permission_name = 'comment'));
+-- -------------------------------------------- co-owner
+insert into role_permission(role_id,permission_id)
+values((select role_id from roles where role_name ='co-owner'),
+	   (select permission_id from permissions where permission_name = 'edit recipe'));
+insert into role_permission(role_id,permission_id)
+values((select role_id from roles where role_name ='co-owner'),
+	   (select permission_id from permissions where permission_name = 'view recipe'));
+insert into role_permission(role_id,permission_id)
+values((select role_id from roles where role_name ='co-owner'),
+	   (select permission_id from permissions where permission_name = 'comment'));
+-- ------------------------------------------------ viewer
+insert into role_permission(role_id,permission_id)
+values((select role_id from roles where role_name ='viewer'),
+	   (select permission_id from permissions where permission_name = 'share recipe'));
+insert into role_permission(role_id,permission_id)
+values((select role_id from roles where role_name ='viewer'),
+	   (select permission_id from permissions where permission_name = 'view recipe'));
+-- --------------------------------------------------------------------------- Group
+-- -----------------------------------------------------group creator
+insert into role_permission(role_id,permission_id)
+values((select role_id from roles where role_name = 'group creator'),
+       (select permission_id from permissions where permission_name = 'create group'));
+insert into role_permission(role_id,permission_id)
+values((select role_id from roles where role_name = 'group creator'),
+       (select permission_id from permissions where permission_name = 'edit group'));
+insert into role_permission(role_id,permission_id)
+values((select role_id from roles where role_name = 'group creator'),
+       (select permission_id from permissions where permission_name = 'delete group'));
+insert into role_permission(role_id,permission_id)
+values((select role_id from roles where role_name = 'group creator'),
+       (select permission_id from permissions where permission_name = 'add member'));
+insert into role_permission(role_id,permission_id)
+values((select role_id from roles where role_name = 'group creator'),
+       (select permission_id from permissions where permission_name = 'remove member'));
+insert into role_permission(role_id,permission_id)
+values((select role_id from roles where role_name = 'group creator'),
+       (select permission_id from permissions where permission_name = 'add admin'));
+insert into role_permission(role_id,permission_id)
+values((select role_id from roles where role_name = 'group creator'),
+       (select permission_id from permissions where permission_name = 'remove admin'));
+insert into role_permission(role_id,permission_id)
+values((select role_id from roles where role_name = 'group creator'),
+       (select permission_id from permissions where permission_name = 'request to join'));
+-- -------------------------------------------------------admin
+insert into role_permission(role_id,permission_id)
+values((select role_id from roles where role_name = 'admin'),
+       (select permission_id from permissions where permission_name = 'create group'));
+insert into role_permission(role_id,permission_id)
+values((select role_id from roles where role_name = 'admin'),
+       (select permission_id from permissions where permission_name = 'edit group'));
+insert into role_permission(role_id,permission_id)
+values((select role_id from roles where role_name = 'admin'),
+       (select permission_id from permissions where permission_name = 'add member'));
+insert into role_permission(role_id,permission_id)
+values((select role_id from roles where role_name = 'admin'),
+       (select permission_id from permissions where permission_name = 'remove member'));
+insert into role_permission(role_id,permission_id)
+values((select role_id from roles where role_name = 'admin'),
+       (select permission_id from permissions where permission_name = 'request to join'));
+-- -------------------------------------------------------member
+insert into role_permission(role_id,permission_id)
+values((select role_id from roles where role_name = 'member'),
+       (select permission_id from permissions where permission_name = 'create group'));
+insert into role_permission(role_id,permission_id)
+values((select role_id from roles where role_name = 'member'),
+       (select permission_id from permissions where permission_name = 'request to join'));
+
+
 
 
 

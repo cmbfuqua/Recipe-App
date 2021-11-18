@@ -2,6 +2,7 @@ drop database recipe_app;
 create database recipe_app;
 use recipe_app;
 
+
 create table measurement(
 measurement_id int        NOT NULL AUTO_INCREMENT,
 measurement varchar(25)   NOT NULL,
@@ -69,15 +70,25 @@ mname        varchar(5)     NOT NULL,
 lname        varchar(100)   NOT NULL,
 registered   date           NOT NULL,
 last_paid    date           NOT NULL,
+passwords    varchar(50)    NOT NULL,
+user_name    varchar(50)    NOT NULL, 
 constraint pk_user_id primary key(user_id)
+);
+
+create table roles (
+role_id       int             NOT NULL AUTO_INCREMENT,
+role_name     varchar(50)     NOT NULL,
+constraint pk_role_id primary key (role_id)
 );
 
 create table user_group(
 user_id     int    NOT NULL,
 group_id    int    NOT NULL,
-constraint pk_composite_ug primary key(user_id,group_id),
+role_id     int    NOT NULL,
+constraint pk_composite_ug primary key(user_id,group_id,role_id),
 constraint fk_user_id_ug foreign key (user_id) references users(user_id),
-constraint fk_group_id foreign key (group_id) references recipe_group(group_id)
+constraint fk_group_id foreign key (group_id) references recipe_group(group_id),
+constraint fk_role_id_ug foreign key (role_id) references roles(role_id)
 );
 
 create table permissions (
@@ -85,12 +96,6 @@ permission_id     int          NOT NULL AUTO_INCREMENT,
 permission_name   varchar(25)  NOT NULL,
 permission_desc   varchar(150) NOT NULL,
 constraint pk_permission_id primary key (permission_id)
-);
-
-create table roles (
-role_id       int             NOT NULL AUTO_INCREMENT,
-role_name     varchar(50)     NOT NULL,
-constraint pk_role_id primary key (role_id)
 );
 
 create table role_permission(
