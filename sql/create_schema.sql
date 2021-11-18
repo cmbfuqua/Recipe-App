@@ -72,6 +72,7 @@ registered   date           NOT NULL,
 last_paid    date           NOT NULL,
 passwords    varchar(50)    NOT NULL,
 user_name    varchar(50)    NOT NULL, 
+email        varchar(50)    ,
 constraint pk_user_id primary key(user_id)
 );
 
