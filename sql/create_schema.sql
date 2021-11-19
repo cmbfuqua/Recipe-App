@@ -66,10 +66,11 @@ constraint pk_group_id primary key(group_id)
 create table users(
 user_id      int            NOT NULL AUTO_INCREMENT,
 fname        varchar(100)   NOT NULL,
-mname        varchar(5)     NOT NULL,
+mname        varchar(50)     NOT NULL,
 lname        varchar(100)   NOT NULL,
 registered   date           NOT NULL,
 last_paid    date           NOT NULL,
+birth_day    date           NOT NULL,
 passwords    varchar(50)    NOT NULL,
 user_name    varchar(50)    NOT NULL, 
 email        varchar(50)    ,

@@ -1,4 +1,3 @@
-from recipe_book import Recipe_Book
 from user_user import User
 import mysql.connector
 from mysql.connector import Error
@@ -46,39 +45,39 @@ def main():
     # Begin program
     ####################################################
     print('\n\nHello, welcome to your families home recipe app\n')
-    choice = input('Would you like to 1: sign up or 2: sign in?')
+    choice = int(input('Would you like to 1: sign up or 2: sign in? '))
     if choice == 1:
         user = User()
         user.sign_up(connection)
-
-
-
-
-    print('How may I help?\n')
-
-
-
+    elif choice == 2:
+        valid_login = False
+        user = User()
+        while valid_login == False:
+            valid_login = user.sign_in(connection)
+        print('VALID LOGIN')
+    else:
+        print('invalid option')
 
 
     ####################################################
     # Legacy code
     ####################################################
-    option = 0
-    while option != 5:
-        put_menu()
+    #option = 0
+    #while option != 5:
+    #    put_menu()
 
-        option = int(input('What would you like to do? '))
+    #    option = int(input('What would you like to do? '))
 
-        if option == 1:
-            recipe.add_recipe()
+#        if option == 1:
+ #           recipe.add_recipe()
 
-        if option == 2:
-            recipe.edit_recipes()
+  #      if option == 2:
+   #         recipe.edit_recipes()
 
-        if option == 3:
-            recipe.delete_recipe()
-        if option == 4: 
-            recipe.view_recipes()
+    #    if option == 3:
+     #       recipe.delete_recipe()
+      #  if option == 4: 
+       #     recipe.view_recipes()
     ################################################
     # Disconnect from database
     ################################################
