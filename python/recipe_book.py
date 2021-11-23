@@ -1,4 +1,4 @@
-from recipe import Recipe
+from recipe_recipe import Recipe
 class Recipe_Book():
     def __init__(self):
         self.name: str

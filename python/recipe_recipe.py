@@ -1,4 +1,4 @@
-from ingredient import Ingredient
+from recipe_ingredient import Ingredient
 class Recipe():
     def __init__(self):
         self.name:str 

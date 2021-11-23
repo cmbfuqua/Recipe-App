@@ -1,7 +1,15 @@
 from user_user import User
+from recipe_book import Recipe_Book
 import mysql.connector
 from mysql.connector import Error
-def put_reicpe_menu():
+def put_main_menu():
+    print('Please select a number:')
+    print('1: Group')
+    print('2: User')
+    print('3: Recipes')
+    print('4: Quit')
+
+def put_recipe_menu():
     print('Please select a number:')
     print('1: Enter a new recipe')
     print('2: Edit a recipe')
@@ -9,17 +17,21 @@ def put_reicpe_menu():
     print('4: View your recipes')
     print('5: Go back')
 
-def put_user_menue():
+def put_group_menu():
+    print('Please select a number:')
+    print('1: Create group')
+    print('2: Edit group info')
+    print('3: Add admin')
+    print('4: Remove admin')
+    print('5: Add member')
+    print('6: Remove member')
+
+def put_user_menu():
     print('Please select a number:')
     print('1: Edit User Info')
-    print('2: Edit password')
+    print('2: Change Password')
     print('3: Go back')
 
-def put_main_menu():
-    print('Please select a number')
-    print('1: Group')
-    print('2: User')
-    print('3: Recipes')
 
 
 def main():
@@ -50,34 +62,71 @@ def main():
         user = User()
         user.sign_up(connection)
     elif choice == 2:
-        valid_login = False
         user = User()
-        while valid_login == False:
-            valid_login = user.sign_in(connection)
-        print('VALID LOGIN')
+        user.sign_in(connection)
     else:
         print('invalid option')
-
-
     ####################################################
-    # Legacy code
+    # Basic Menu logic
     ####################################################
-    #option = 0
-    #while option != 5:
-    #    put_menu()
 
-    #    option = int(input('What would you like to do? '))
+    print('\n')
+    main_option = 0
+    while main_option != 4:
+        print('\n')
+        put_main_menu()
+        main_option = int(input('Number: '))
+        ########################################
+        # Go into the group menu
+        ########################################
+        if main_option == 1:
+            put_group_menu()
+        #     second_option = 0
+        #     while second_option != 6:
+        #         second_option = int(input('Number: '))
+        #         if second_option == 1:
 
-#        if option == 1:
- #           recipe.add_recipe()
+        #         elif second_option == 2:
+                
+        #         elif second_option == 3:
 
-  #      if option == 2:
-   #         recipe.edit_recipes()
+        #         elif second_option == 4:
 
-    #    if option == 3:
-     #       recipe.delete_recipe()
-      #  if option == 4: 
-       #     recipe.view_recipes()
+        #         elif second_option == 5:
+        ########################################
+        # Go into the user menu
+        ########################################
+        elif main_option == 2:
+            second_option = 0
+            while second_option != 3:
+                put_user_menu()
+                second_option = int(input('Number: '))
+                if second_option == 1:
+                    user.edit_info(connection)
+                elif second_option == 2:
+                    user.change_password(connection)
+        # ########################################
+        # # Go into the recipe menu
+        # ########################################
+        # elif main_option == 3:
+        #     put_recipe_menu()
+        #     second_option = 0
+        #     while second_option != 5:
+        #         second_option = int(input('Number: '))
+        #         if second_option == 1:
+
+        #         elif second_option == 2:
+                
+        #         elif second_option == 3:
+
+        #         elif second_option == 4:
+
+        elif main_option == 4:
+            continue
+        else:
+            print('Invalid number, try again.')
+
+
     ################################################
     # Disconnect from database
     ################################################
