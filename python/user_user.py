@@ -162,11 +162,12 @@ class User():
 
     def change_password(self,connection):
         self.get_password(connection)
+        print('Please input new password')
         self.set_password()
 
         insert_query = f'''
         UPDATE users 
-        SET `passwords` = '{self.password}''
+        SET `passwords` = '{self.password}'
         WHERE `user_id` = {self.user_id}
         '''  
         cursor = connection.cursor()
