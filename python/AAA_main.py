@@ -56,7 +56,7 @@ def main():
     ####################################################
     # Begin program
     ####################################################
-    print('\n\nHello, welcome to your families home recipe app\n')
+    print('\nHello, welcome to your families home recipe app\n')
     choice = int(input('Would you like to 1: sign up or 2: sign in? '))
     if choice == 1:
         user = User()
@@ -69,11 +69,9 @@ def main():
     ####################################################
     # Basic Menu logic
     ####################################################
-
-    print('\n')
     main_option = 0
+    print()
     while main_option != 4:
-        print('\n')
         put_main_menu()
         main_option = int(input('Number: '))
         ########################################
@@ -108,18 +106,18 @@ def main():
         # ########################################
         # # Go into the recipe menu
         # ########################################
-        # elif main_option == 3:
-        #     put_recipe_menu()
-        #     second_option = 0
-        #     while second_option != 5:
-        #         second_option = int(input('Number: '))
-        #         if second_option == 1:
+        elif main_option == 3:
+            put_recipe_menu()
+            second_option = 0
+            while second_option != 5:
+                second_option = int(input('Number: '))
+                if second_option == 1:
 
-        #         elif second_option == 2:
+                elif second_option == 2:
                 
-        #         elif second_option == 3:
+                elif second_option == 3:
 
-        #         elif second_option == 4:
+                elif second_option == 4:
 
         elif main_option == 4:
             continue

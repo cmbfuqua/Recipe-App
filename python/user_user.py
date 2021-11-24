@@ -24,6 +24,18 @@ class User():
             self.password = input('Confirm Password: ')
             if password != self.password:
                 print('Passwords must be identical, please try again')
+
+    def hash_password(self):
+        # uuid is used to generate a random number
+        import uuid
+        import hashlib
+        salt = uuid.uuid4().hex
+        return hashlib.sha256(salt.encode() + self.password.encode()).hexdigest() + ':' + salt
+        
+    def check_password(self,hashed_password):
+        import hashlib
+        password, salt = hashed_password.split(':')
+        return password == hashlib.sha256(salt.encode() + self.password.encode()).hexdigest()
     
     def sign_up(self,connection):
         print('Please fill out all of the information below:')
@@ -55,6 +67,7 @@ class User():
         self.password = 'blank'
         self.set_password()
         # Post the information to the database
+        self.password = self.hash_password()
         insert_query = f'''
         INSERT INTO users (`fname`,`mname`,`lname`,`registered`, `last_paid`,`birth_day`,`passwords`, `user_name`,`email`)
         VALUES ('{self.fname}','{self.mname}','{self.lname}','{self.registered}','{self.last_paid}','{self.birth_day}','{self.password}','{self.user_name}','{self.email}');'''
@@ -94,8 +107,9 @@ class User():
             cursor.execute(get_password)
             result = cursor.fetchall()
             cursor.close()
+            hpass = result[0][0]
             #print(result[0][0])
-            if self.password == result[0][0]:
+            if self.check_password(hashed_password= hpass) == True:
                 equal = True
             else:
                 print('The password does not match the username. Please try again.')
@@ -164,7 +178,7 @@ class User():
         self.get_password(connection)
         print('Please input new password')
         self.set_password()
-
+        self.password = self.hash_password()
         insert_query = f'''
         UPDATE users 
         SET `passwords` = '{self.password}'
