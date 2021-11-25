@@ -6,7 +6,7 @@ class Recipe_Book():
         self.creation: str 
         self.recipes = []
         
-    def add_recipe(self):
+    def add_recipe(self,connection):
         recipe = Recipe()
         recipe.set_name()
         num_ingredients = int(input('How many ingredients are there? '))

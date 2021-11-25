@@ -1,6 +1,8 @@
 from datetime import date
 from mysql.connector import Error
 import datetime
+from recipe_book import Recipe_Book
+
 
 class User():
     def __init__(self):
@@ -16,6 +18,8 @@ class User():
         self.user_book:dict
         self.user_group:dict
         self.user_id:int
+        self.shared_books = []
+        self.recipe_book:object
 
     def set_password(self):
         password = ''
@@ -37,49 +41,6 @@ class User():
         password, salt = hashed_password.split(':')
         return password == hashlib.sha256(salt.encode() + self.password.encode()).hexdigest()
     
-    def sign_up(self,connection):
-        print('Please fill out all of the information below:')
-        print('---------------------------------------------')
-        self.fname = input('Fist Name: ')
-        self.mname = input('Middle Name: ')
-        self.lname = input('Last Name: ')
-        self.registered = date.today()
-        self.last_paid = date.today()
-        unique = False
-        # This is the logic to check for a unique user name in the database. 
-        # it needs to be unique or else the password verrification won't work.
-        while unique == False:
-            self.user_name = input('User Name: ')
-            log_in = f'''SELECT count(user_name) FROM users where user_name = '{self.user_name}';'''
-            cursor = connection.cursor()
-            cursor.execute(log_in)
-            result = cursor.fetchall()
-            #print(result[0][0])           
-            if result[0][0] > 0:
-                unique = False
-                print('That user name already exists. Please try again.\n')
-                cursor.close()
-            else:
-                cursor.close()
-                unique = True      
-        self.birth_day = datetime.datetime.strptime(input('Birthday (mm/dd/yyy): '),'%m/%d/%Y')
-        self.email = input('Email: ')
-        self.password = 'blank'
-        self.set_password()
-        # Post the information to the database
-        self.password = self.hash_password()
-        insert_query = f'''
-        INSERT INTO users (`fname`,`mname`,`lname`,`registered`, `last_paid`,`birth_day`,`passwords`, `user_name`,`email`)
-        VALUES ('{self.fname}','{self.mname}','{self.lname}','{self.registered}','{self.last_paid}','{self.birth_day}','{self.password}','{self.user_name}','{self.email}');'''
-        try:   
-            cursor = connection.cursor()
-            cursor.execute(insert_query)
-            connection.commit()
-            print(cursor.rowcount,'Record inserted successfully into Users table')
-            cursor.close()
-        except Error as error:
-            print('Failed to insert record into User table {}'.format(error))        
-
     def get_username(self,connection): 
         found_user = False
         while found_user != True:
@@ -102,7 +63,7 @@ class User():
             self.password = input('Password: ')
 
             get_password = f'''SELECT passwords FROM users WHERE user_name = '{self.user_name}';'''
-              
+            
             cursor = connection.cursor()
             cursor.execute(get_password)
             result = cursor.fetchall()
@@ -131,6 +92,88 @@ class User():
         self.password = result[7]
         self.user_name = result[8]
         self.email = result[9]
+
+    def insert_UserBook(self,connection,role,recipe_name):
+        cursor = connection.cursor()
+        user_book_insert = f'''
+        INSERT INTO user_book(`role_id`,`user_id`,`book_id`)
+        VALUES ((SELECT role_id from roles where role_name = '{role}'),
+               (SELECT user_id from users where user_name = '{self.user_name}'),
+               (SELECT book_id from recipe_book where book_name = '{recipe_name}'));
+        '''
+        cursor.execute(user_book_insert)
+        #connection.commit()
+        cursor.close()
+
+    def sign_up(self,connection):
+        print('Please fill out all of the information below:')
+        print('---------------------------------------------')
+        self.recipe_book = Recipe_Book()
+        self.fname = input('Fist Name: ')
+        self.mname = input('Middle Name: ')
+        self.lname = input('Last Name: ')
+        self.registered = date.today()
+        self.last_paid = date.today()
+        unique = False
+        # This is the logic to check for a unique user name in the database. 
+        # it needs to be unique or else the password verrification won't work.
+        while unique == False:
+            self.user_name = input('User Name: ')
+            log_in = f'''SELECT count(user_name) FROM users where user_name = '{self.user_name}';'''
+            cursor = connection.cursor()
+            cursor.execute(log_in)
+            result = cursor.fetchall()
+            #print(result[0][0])           
+            if result[0][0] > 0:
+                unique = False
+                print('That user name already exists. Please try again.\n')
+                cursor.close()
+            else:
+                cursor.close()
+                unique = True      
+        self.birth_day = datetime.datetime.strptime(input('Birthday (mm/dd/yyyy): '),'%m/%d/%Y')
+        self.email = input('Email: ')
+        self.password = 'blank'
+        self.set_password()
+        # Post the information to the database
+        self.password = self.hash_password()
+        insert_query = f'''
+        INSERT INTO users (`fname`,`mname`,`lname`,`registered`, `last_paid`,`birth_day`,`passwords`, `user_name`,`email`)
+        VALUES ('{self.fname}','{self.mname}','{self.lname}','{self.registered}','{self.last_paid}','{self.birth_day}','{self.password}','{self.user_name}','{self.email}');'''
+        try:   
+            cursor = connection.cursor()
+            cursor.execute(insert_query)
+            #connection.commit()
+            #print(cursor.rowcount,'Record inserted successfully into Users table')
+            cursor.close()
+        except Error as error:
+            print('Failed to insert record into User table {}'.format(error)) 
+        
+        # Instatiate the User's first Recipe Book
+        unique = False
+        while unique == False:
+            recipe_name = input('What is the name of your Recipe Book? ')
+            check_recipe = f'''
+            SELECT count(book_name) from recipe_book where book_name = '{recipe_name}';'''   
+            cursor = connection.cursor()
+            cursor.execute(check_recipe)
+            result = cursor.fetchall()
+            cursor.close()
+            if result[0][0] > 0:
+                print('I\'m Sorry, that name is already in use. Please try another name')
+            else:
+                unique = True
+        
+        recipe_insert = f'''
+        INSERT INTO recipe_book(`book_name`)
+        VALUES ('{recipe_name}');
+        '''
+        cursor = connection.cursor()
+        cursor.execute(recipe_insert)
+        #connection.commit()
+        cursor.close()
+        self.insert_UserBook(connection,recipe_name = recipe_name,role = 'owner')
+        connection.commit()
 
     def sign_in(self,connection):
         self.get_username(connection)

@@ -1,7 +1,7 @@
 from user_user import User
-from recipe_book import Recipe_Book
 import mysql.connector
 from mysql.connector import Error
+
 def put_main_menu():
     print('Please select a number:')
     print('1: Group')
@@ -61,6 +61,8 @@ def main():
     if choice == 1:
         user = User()
         user.sign_up(connection)
+        print('\nThank you for signing up, now please sign in.')
+        user.sign_in(connection)
     elif choice == 2:
         user = User()
         user.sign_in(connection)
@@ -112,13 +114,13 @@ def main():
             while second_option != 5:
                 second_option = int(input('Number: '))
                 if second_option == 1:
-
+                    user.recipe_book.add_recipe(connection)
                 elif second_option == 2:
-                
+                    user.recipe_book.edit_recipes()
                 elif second_option == 3:
-
+                    user.recipe_book.delete_recipe()
                 elif second_option == 4:
-
+                    user.recipe_book.view_recipes()
         elif main_option == 4:
             continue
         else:

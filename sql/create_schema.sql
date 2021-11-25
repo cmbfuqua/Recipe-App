@@ -18,20 +18,29 @@ constraint pk_ingredient_id primary key (ingredient_id),
 constraint fk_measurement_id foreign key(measurement_id) references measurement(measurement_id)
 );
 
-create table recipe_category(
-category_id      int           NOT NULL AUTO_INCREMENT,
-category_name    varchar(50)   NOT NULL,
-constraint pk_category_id primary key (category_id)
+create table recipe_book(
+book_id            int                NOT NULL AUTO_INCREMENT,
+book_name          varchar(100)       NOT NULL,
+constraint pk_book_id primary key (book_id)
 );
 
 create table recipe(
 recipe_id            int            NOT NULL AUTO_INCREMENT,
 recipe_name          varchar(50)    NOT NULL,
 recipe_description   varchar(50)    NOT NULL,
-category_id          int            NOT NULL,
-constraint pk_recipe_id primary key (recipe_id),
-constraint fk_rcategory_id foreign key (category_id) references recipe_category(category_id)
+constraint pk_recipe_id primary key (recipe_id)
 );
+
+create table recipe_category(
+recipe_id                 int           NOT NULL,
+book_id                   int           NOT NULL,
+category_name    varchar(50)            NOT NULL,
+constraint pk_recipe_book_category_id primary key (recipe_id,book_id),
+constraint fk_recipec_id foreign key (recipe_id) references recipe(recipe_id),
+constraint fk_bookc_id foreign key (book_id) references recipe_book(book_id)
+);
+
+
 
 create table recipe_step_ingredient(
 ingredient_id    int   NOT NULL,
@@ -42,12 +51,8 @@ constraint fk_ingredient_id foreign key (ingredient_id) references ingredients(i
 constraint fk_recipe_id foreign key (recipe_id) references recipe(recipe_id)
 );
 
-create table recipe_book(
-book_id            int       NOT NULL AUTO_INCREMENT,
-book_name          int       NOT NULL,
-constraint pk_book_id primary key (book_id)
-);
 
+/*
 create table book_category(
 book_id        int    NOT NULL,
 category_id    int    NOT NULL,
@@ -55,7 +60,7 @@ constraint pk_composite_bc primary key (book_id,category_id),
 constraint fk_book_id foreign key (book_id) references recipe_book(book_id),
 constraint fk_bcategory_id foreign key (category_id) references recipe_category(category_id)
 );
-
+*/
 create table recipe_group(
 group_id       int           NOT NULL AUTO_INCREMENT,
 group_name     varchar(100)  NOT NULL,
